@@ -40,13 +40,8 @@ Based on the official images:
 bash~#: docker-compose up
 ```
 
-**Populate stack with logs from file:**<br />
-```
-bash~#: nc localhost 5000 < /path/to/logfile.log
-```
-
 **Populate stack with logs from Redis:**<br />
- 1. Exec: ```bash~#: telnet localhost 6379```<br />
+ 1. Exec: ```telnet localhost 6379```<br />
  2. Paste: ```RPUSH chan_collector '{"foo2":"bar2"}'```
 
 **View logs/data Kibana:**<br />
