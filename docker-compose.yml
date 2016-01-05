@@ -4,6 +4,10 @@ elasticsearch:
   ports:
     - "9200:9200"
     - "9300:9300"
+redis:
+  image: redis
+  ports:
+    - "6379:6379"
 logstash:
   image: logstash:latest
   command: logstash -f /etc/logstash/conf.d/logstash.conf
@@ -13,11 +17,15 @@ logstash:
     - "5000:5000"
   links:
     - elasticsearch
+    - redis
+  environment:
+    - LS_HEAP_SIZE=1024m
 kibana:
   build: kibana/
   volumes:
-    - ./kibana/config/kibana.yml:/opt/kibana/config/kibana.yml
+    - ./kibana/config:/opt/kibana/config
   ports:
     - "5601:5601"
   links:
     - elasticsearch
+

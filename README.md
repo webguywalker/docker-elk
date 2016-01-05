@@ -1,53 +1,74 @@
-# Docker ELK stack
+# Docker ELK(R) stack
 
-[![Join the chat at https://gitter.im/deviantony/fig-elk](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/deviantony/fig-elk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-Run the latest version of the ELK (Elasticseach, Logstash, Kibana) stack with Docker and Docker-compose.
-
-It will give you the ability to analyze any data set by using the searching/aggregation capabilities of Elasticseach and the visualization power of Kibana.
+Run the latest version of the ELK(R) (Elasticseach, Logstash, Kibana, Redis) stack with Docker and Docker-compose.<br />
+It will give you the ability to analyze any data set by using the searching/aggregation capabilities of Elasticseach, storage capabilities of Redis key/value store, and the visualization power of Kibana.
 
 Based on the official images:
 
 * [elasticsearch](https://registry.hub.docker.com/_/elasticsearch/)
 * [logstash](https://registry.hub.docker.com/_/logstash/)
 * [kibana](https://registry.hub.docker.com/_/kibana/)
+* [redis](https://hub.docker.com/_/redis/)
 
-# Requirements
+<hr />
 
-## Setup
+# Table of Contents
+* [Requirements](#requirements)
+ * [Setup](#setup)
+ * [Quick Start](#quick_start)
+* [Usage](#usage)
+* [Configuration](#configuration)
+ * SELinux
+ * Kibana
+ * Logstash
+ * Elasticsearch
+
+<hr />
+
+## <a name="requirements"></a> Requirements
+
+### <a name="setup"></a> Setup
 
 1. Install [Docker](http://docker.io).
 2. Install [Docker-compose](http://docs.docker.com/compose/install/).
 3. Clone this repository
 
-## SELinux
+### <a name="quick_start"></a> Quick Start
 
-On distributions which have SELinux enabled out-of-the-box you will need to either re-context the files or set SELinux into Permissive mode in order for docker-elk to start properly.
-For example on Redhat and CentOS, the following will apply the proper context:
+**Start the stack:**<br />
+```
+bash~#: docker-compose up
+```
 
-````bash
-.-root@centos ~
--$ chcon -R system_u:object_r:admin_home_t:s0 fig-elk/
-````
+**Populate stack with logs from file:**<br />
+```
+bash~#: nc localhost 5000 < /path/to/logfile.log
+```
 
-# Usage
+**Populate stack with logs from Redis:**<br />
+ 1. Exec: ```bash~#: telnet localhost 6379```<br />
+ 2. Paste: ```RPUSH chan_collector '{"foo2":"bar2"}'```
+
+**View logs/data Kibana:**<br />
+```
+open http://localhost:5601/
+```
+
+## <a name="usage"></a> Usage 
 
 Start the ELK stack using *docker-compose*:
-
-```bash
-$ docker-compose up
+```
+bash~#: docker-compose up
 ```
 
 You can also choose to run it in background (detached mode):
-
-```bash
-$ docker-compose up -d
+```
+bash~#: docker-compose up -d
 ```
 
 Now that the stack is running, you'll want to inject logs in it. The shipped logstash configuration allows you to send content via tcp:
-
-```bash
-$ nc localhost 5000 < /path/to/logfile.log
+```
+$bash~#: nc localhost 5000 < /path/to/logfile.log
 ```
 
 And then access Kibana UI by hitting [http://localhost:5601](http://localhost:5601) with a web browser.
@@ -63,11 +84,23 @@ By default, the stack exposes the following ports:
 * 9300: Elasticsearch TCP transport
 * 5601: Kibana
 
-*WARNING*: If you're using *boot2docker*, you must access it via the *boot2docker* IP address instead of *localhost*.
+> *WARNING*: If you're using *boot2docker*, you must access it via the *boot2docker* IP address instead of *localhost*.<br />
+> *WARNING*: If you're using *Docker Toolbox*, you must access it via the *docker-machine* IP address instead of *localhost*.
 
-*WARNING*: If you're using *Docker Toolbox*, you must access it via the *docker-machine* IP address instead of *localhost*.
 
-# Configuration
+## SELinux
+
+On distributions which have SELinux enabled out-of-the-box you will need to either re-context the files or set SELinux into Permissive mode in order for docker-elk to start properly.
+For example on Redhat and CentOS, the following will apply the proper context:
+
+````bash
+.-root@centos ~
+-$ chcon -R system_u:object_r:admin_home_t:s0 fig-elk/
+````
+
+
+
+# <a name="configuration"></a> Configuration
 
 *NOTE*: Configuration is not dynamically reloaded, you will need to restart the stack after any change in the configuration of a component.
 
