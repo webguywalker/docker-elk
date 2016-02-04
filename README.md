@@ -10,7 +10,8 @@ Based on the official images:
 * [kibana](https://registry.hub.docker.com/_/kibana/)
 * [redis](https://hub.docker.com/_/redis/)
 
-<hr />
+
+
 
 # Table of Contents
 * [Requirements](#requirements)
@@ -23,7 +24,8 @@ Based on the official images:
  * Logstash
  * Elasticsearch
 
-<hr />
+
+
 
 ## <a name="requirements"></a> Requirements
 
